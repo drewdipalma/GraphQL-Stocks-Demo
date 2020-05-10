@@ -1,17 +1,18 @@
 import "./index.css";
 import * as React from "react";
 import { APP_ID } from "./index";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { FIND_STOCK } from "./graphql-operations";
+import { useQuery} from "@apollo/react-hooks";
+import {FIND_STOCK} from "./graphql-operations";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
-  const { loading, data } = useQuery(FIND_STOCK, {
-    variables: { query: { "_id":  searchText} },
+  const { loading, error, data } = useQuery(FIND_STOCK, 
+  {variables: { query: { ticker:  searchText} }, 
   });
-  const stock = data ? data.basicRecord : null;
-  console.log(stock);
-  console.log(data);
+  const stock = data ? data.RecordWithPrice : null;
+  console.log(searchText)
+  console.log(data)
+  console.log(stock)
 
   return (
     <div className="App">
@@ -29,7 +30,14 @@ export default function App(props) {
       </div>
       {
         !loading &&
-        !stock && <div className="status">No Stock with that ticker!</div>
+        !stock && (
+          <div className="status">No Stock with that ticker!
+            <pre>Bad: {error.graphQLErrors.map(({ message }, i) => (
+              <span key={i}>{message}</span>
+            ))}
+            </pre>
+          </div>
+        )
       }
       {stock && (
         <div>
