@@ -1,13 +1,13 @@
 import * as React from "react";
 import {app} from "./index";
-import {AnonymousCredential, UserPasswordCredential} from "mongodb-stitch-browser-sdk";
+import { useMutation } from "@apollo/react-hooks";
+import { UPDATE_USER } from "./graphql-operations";
 
-export default class LoginButton extends React.Component {
+export default class UpdateButton extends React.Component {
     constructor(props) {
         super(props);
          
-        this.state = {user: app.auth.user};
-        this.state.loggedIn = this.state.user.loggedInProviderType === 'anon-user' ? false : true;
+        this.state = {isPremium: app.auth.user.customData.isPremium};
         this.handleClick = this.handleClick.bind(this);
       }
 
@@ -29,7 +29,7 @@ export default class LoginButton extends React.Component {
     render() {
       return (
         <button onClick={(loginInfo) => this.handleClick(loginInfo)}>
-          {this.state.loggedIn ? 'Log Out' : 'Log In'}
+          {this.state.isPremium ? 'Upgrade' : 'Downgrade'}
         </button>
       );
     }
