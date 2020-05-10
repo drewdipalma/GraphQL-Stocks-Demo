@@ -1,7 +1,4 @@
 import * as React from "react";
-import { APP_ID } from "./index";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { FIND_STOCK } from "./graphql-operations";
 
 export default function ExpandedStock(props) {
   const { stock } = props;
