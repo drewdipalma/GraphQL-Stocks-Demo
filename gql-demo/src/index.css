@@ -98,3 +98,7 @@ code {
 .expand-arrow {
   font-size: 25px;
 }
+
+.expanded {
+  border: 3px solid #13aa52;
+}

@@ -8,8 +8,8 @@ export default function ExpandedStock(props) {
   return (
     <div className="stock expanded">
       <div>
-        <h2 className="stock-name">{this.props.stock.shortName}</h2>
-        <div className="stock-ticker">Ticker: {this.props.stock._id}</div>
+        <h2 className="stock-name">{stock.shortName}</h2>
+        <div className="stock-ticker">Ticker: {stock._id}</div>
       </div>
       <div className="expand-arrow">+</div>
     </div>
