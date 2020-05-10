@@ -3,6 +3,7 @@ import * as React from "react";
 import { APP_ID } from "./index";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { FIND_STOCK } from "./graphql-operations";
+import Stock from "./Stock";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
@@ -45,14 +46,9 @@ export default function App(props) {
         {!loading && !stock && (
           <div className="status">No Stock with that ticker!</div>
         )}
-        {stock && (
-          <div className="current-stock">
-            <h2>{stock.shortName}</h2>
-            <div>Ticker: {stock._id}</div>
-            <br />
-          </div>
-        )}
+        {stock && <Stock stock={stock} />}
       </div>
+      <div className="saved-stocks">{/* saved stocks */}</div>
     </div>
   );
 }
