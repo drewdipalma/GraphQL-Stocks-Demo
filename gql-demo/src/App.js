@@ -4,7 +4,9 @@ import { APP_ID } from "./index";
 import Stock from "./Stock";
 import LoginButton from "./LoginButton";
 import { useQuery, useMutation } from "@apollo/react-hooks";
-import { FIND_STOCK, UPDATE_USER} from "./graphql-operations";
+import { FIND_STOCK, UPDATE_USER } from "./graphql-operations";
+import { app } from "./index.js";
+import SavedStock from "./SavedStock";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
@@ -15,6 +17,9 @@ export default function App(props) {
   // console.log(searchText);
   // console.log(data);
   // console.log(stock);
+  let savedStocks = ["MDB", "AAP", "MDB", "MDB", "MDB"];
+
+  console.log(savedStocks);
 
   return (
     <div className="App">
@@ -26,13 +31,11 @@ export default function App(props) {
           <button className="utilities-elem" id="upgrade-button">
             Upgrade
           </button>
-            <LoginButton/>
+          <LoginButton />
         </div>
       </div>
       <div className="search-area">
-        <span className="subheading">
-         Search for a stock – 
-        </span>
+        <span className="subheading">Search for a stock – </span>
         <div className="title-input">
           <input
             className="fancy-input"
@@ -56,7 +59,11 @@ export default function App(props) {
         )}
         {stock && <Stock stock={stock} />}
       </div>
-      <div className="saved-stocks">{/* saved stocks */}</div>
+      <div className="saved-stocks">
+        {savedStocks.map((stock) => {
+          return <SavedStock stock={stock} />;
+        })}
+      </div>
     </div>
   );
 }
