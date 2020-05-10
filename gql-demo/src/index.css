@@ -80,11 +80,12 @@ code {
 .stock {
   background-color: #b9eacd;
   height: 75px;
-  width: 90%;
   padding: 5px 15px 5px 15px;
   display: flex;
   justify-content: space-between;
   align-content: center;
+  width: 80%;
+  border: 3px solid #13aa52;
 }
 
 .stock:hover {
@@ -99,6 +100,62 @@ code {
   font-size: 25px;
 }
 
-.expanded {
+.expanded-wrapper {
   border: 3px solid #13aa52;
+  height: 200px;
+  width: 80%;
+}
+
+.expanded-wrapper > .stock {
+  background-color: #83dba7;
+  border: none;
+  width: 100%;
+}
+
+.expanded-wrapper > .stock:hover {
+  background-color: #b9eacd;
+}
+
+.stock-header {
+  display: flex;
+}
+
+h4 {
+  margin: 0px 0px 5px 0px;
+}
+
+p {
+  margin: 0;
+  font-style: italic;
+  font-size: 15px;
+  margin: 0px 0px 5px 0px;
+}
+
+.prem-data-col {
+  padding: 5px 15px 5px 15px;
+  width: 30%;
+}
+
+.right > .data-field {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.data-field {
+  display: flex;
+}
+
+.data {
+  margin-left: 5px;
+}
+
+.prem-data-section {
+  display: flex;
+  height: 125px;
+  justify-content: space-between;
+}
+
+#current-price-field {
+  display: flex;
+  align-items: center;
 }
