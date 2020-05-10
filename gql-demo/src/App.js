@@ -2,8 +2,9 @@ import "./index.css";
 import * as React from "react";
 import { APP_ID } from "./index";
 import Stock from "./Stock";
-import { useQuery } from "@apollo/react-hooks";
-import { FIND_STOCK } from "./graphql-operations";
+import LoginButton from "./LoginButton";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { FIND_STOCK, UPDATE_USER} from "./graphql-operations";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
@@ -25,14 +26,12 @@ export default function App(props) {
           <button className="utilities-elem" id="upgrade-button">
             Upgrade
           </button>
-          <button className="utilities-elem" id="login">
-            Login
-          </button>
+            <LoginButton/>
         </div>
       </div>
       <div className="search-area">
         <span className="subheading">
-          The app automatically searches as you type – 
+         Search for a stock – 
         </span>
         <div className="title-input">
           <input
