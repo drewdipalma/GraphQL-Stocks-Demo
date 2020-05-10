@@ -22,14 +22,14 @@ query RecordWithPrice($query: RecordWithPriceInputType!){
 }
 `;
 
-/*
-export const FIND_STOCK_PREMIUM  = gql`
-query basicRecord($query: BasicRecordQueryInput!){
-  basicRecord(query: $query){
+export const UPDATE_USER  = gql`
+mutation updateOneUser($query: UserQueryInput, $set: UserUpdateInput!){
+  updateOneUser(query: $query, set: $set) {
     _id
-		companyName
-		shortName
+    createdTime
+    email
+    premiumUser
+    savedStocks
   }
 }
 `;
-*/
