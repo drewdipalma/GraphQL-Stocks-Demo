@@ -2,14 +2,15 @@ import "./index.css";
 import * as React from "react";
 import Stock from "./Stock";
 import LoginButton from "./LoginButton";
-import {app} from "./index";
+import SavedStock from "./SavedStock";
+import { app } from "./index";
 import UpgradeButton from "./UpgradeButton";
-import {useQuery, useMutation} from "@apollo/react-hooks";
-import {FIND_STOCK, UPDATE_USER} from "./graphql-operations";
+import { useQuery, useMutation } from "@apollo/react-hooks";
+import { FIND_STOCK, UPDATE_USER } from "./graphql-operations";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
-  const {loading, error, data } = useQuery(FIND_STOCK, {
+  const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
   });
 
@@ -18,23 +19,26 @@ export default function App(props) {
   const updateUser = async () => {
     let response = await upgradeUser({
       variables: {
-        query: {_id: app.auth.user.id},
-        set: { premiumUser: !app.auth.user.customData.premiumUser},
+        query: { _id: app.auth.user.id },
+        set: { premiumUser: !app.auth.user.customData.premiumUser },
       },
     });
 
     await app.auth.refreshAccessToken();
 
-    console.log(app.auth.user.customData.premiumUser)
+    console.log(app.auth.user.customData.premiumUser);
 
     console.log(response);
-  }
+  };
 
   const stock = data ? data.RecordWithPrice : null;
 
   // console.log(searchText);
   // console.log(data);
   // console.log(stock);
+  let savedStocks = ["MDB", "AAP", "MDB", "MDB", "MDB"];
+
+  console.log(savedStocks);
 
   return (
     <div className="App">
@@ -46,13 +50,11 @@ export default function App(props) {
           <button className="utilities-elem " onClick={() => updateUser()}>
             Upgrade
           </button>
-          <LoginButton/>
+          <LoginButton />
         </div>
       </div>
       <div className="search-area">
-        <span className="subheading">
-         Search for a stock – 
-        </span>
+        <span className="subheading">Search for a stock – </span>
         <div className="title-input">
           <input
             className="fancy-input"
@@ -76,7 +78,11 @@ export default function App(props) {
         )}
         {stock && <Stock stock={stock} />}
       </div>
-      <div className="saved-stocks">{/* saved stocks */}</div>
+      <div className="saved-stocks">
+        {savedStocks.map((stock) => {
+          return <SavedStock stock={stock} />;
+        })}
+      </div>
     </div>
   );
 }
