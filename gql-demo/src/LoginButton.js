@@ -5,9 +5,7 @@ import {AnonymousCredential, UserPasswordCredential} from "mongodb-stitch-browse
 export default class LoginButton extends React.Component {
     constructor(props) {
         super(props);
-         
-        this.state = {user: app.auth.user};
-        this.state.loggedIn = this.state.user.loggedInProviderType === 'anon-user' ? false : true;
+        this.state = {loggedIn : app.auth.user.loggedInProviderType === 'anon-user' ? false : true};
         this.handleClick = this.handleClick.bind(this);
       }
 
@@ -21,7 +19,6 @@ export default class LoginButton extends React.Component {
         }
         
         this.setState(state => ({
-            user: app.auth.user,
             loggedIn: app.auth.user.loggedInProviderType === 'anon-user' ? false : true
           }));
     }

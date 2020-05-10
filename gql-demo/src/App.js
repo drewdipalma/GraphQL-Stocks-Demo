@@ -1,17 +1,37 @@
 import "./index.css";
 import * as React from "react";
-import { APP_ID } from "./index";
 import Stock from "./Stock";
 import LoginButton from "./LoginButton";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { FIND_STOCK, UPDATE_USER} from "./graphql-operations";
+import {app} from "./index";
+import UpgradeButton from "./UpgradeButton";
+import {useQuery, useMutation} from "@apollo/react-hooks";
+import {FIND_STOCK, UPDATE_USER} from "./graphql-operations";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
-  const { loading, error, data } = useQuery(FIND_STOCK, {
+  const {loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
   });
+
+  const [upgradeUser, { loading: updating }] = useMutation(UPDATE_USER);
+
+  const updateUser = async () => {
+    let response = await upgradeUser({
+      variables: {
+        query: {_id: app.auth.user.id},
+        set: { premiumUser: !app.auth.user.customData.premiumUser},
+      },
+    });
+
+    await app.auth.refreshAccessToken();
+
+    console.log(app.auth.user.customData.premiumUser)
+
+    console.log(response);
+  }
+
   const stock = data ? data.RecordWithPrice : null;
+
   // console.log(searchText);
   // console.log(data);
   // console.log(stock);
@@ -23,10 +43,10 @@ export default function App(props) {
           <h1 id="page-title">Find a Stock</h1>
         </div>
         <div className="utilities">
-          <button className="utilities-elem" id="upgrade-button">
+          <button className="utilities-elem " onClick={() => updateUser()}>
             Upgrade
           </button>
-            <LoginButton/>
+          <LoginButton/>
         </div>
       </div>
       <div className="search-area">
