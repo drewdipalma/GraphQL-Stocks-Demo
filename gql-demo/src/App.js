@@ -12,9 +12,9 @@ export default function App(props) {
     variables: { query: { ticker: searchText } },
   });
   const stock = data ? data.RecordWithPrice : null;
-  console.log(searchText);
-  console.log(data);
-  console.log(stock);
+  // console.log(searchText);
+  // console.log(data);
+  // console.log(stock);
 
   return (
     <div className="App">

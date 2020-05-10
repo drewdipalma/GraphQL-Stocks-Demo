@@ -7,16 +7,31 @@ export default class Stock extends React.Component {
     this.state = {
       expanded: false,
     };
+    this.toggleExpand = this.toggleExpand.bind(this);
+  }
+
+  toggleExpand() {
+    this.setState({ expanded: !this.state.expanded });
   }
 
   render() {
+    console.log(this.props);
     return this.state.expanded ? (
-      <ExpandedStock stock={this.props} />
+      <ExpandedStock
+        stock={this.props.stock}
+        toggleExpand={this.toggleExpand}
+      />
     ) : (
-      <div className="stock">
+      <div className="stock" onClick={this.toggleExpand}>
         <div>
           <h2 className="stock-name">{this.props.stock.shortName}</h2>
           <div className="stock-ticker">Ticker: {this.props.stock._id}</div>
+        </div>
+        <div id="current-price-field">
+          <div className="data-field">
+            <h4>Latest Price: </h4>
+            <div className="data">${this.props.stock.latestPrice}</div>
+          </div>
         </div>
         <div className="expand-arrow">+</div>
       </div>
