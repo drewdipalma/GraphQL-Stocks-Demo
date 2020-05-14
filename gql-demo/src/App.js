@@ -1,23 +1,38 @@
 import "./index.css";
 import * as React from "react";
-import Stock from "./Stock";
-import LoginButton from "./LoginButton";
-import SavedStock from "./SavedStock";
+import Stock from "./components/Stock";
+import LoginButton from "./components/LoginButton";
+import SavedStock from "./components/SavedStock";
 import { app } from "./index";
-import UpgradeButton from "./UpgradeButton";
+import UpgradeButton from "./components/UpgradeButton";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { FIND_STOCK } from "./graphql-operations";
 import {
   AnonymousCredential,
   UserPasswordCredential,
 } from "mongodb-stitch-browser-sdk";
-import LoginFields from "./LoginFields";
+import LoginFields from "./components/LoginFields";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
   const [savedStocks, setSavedStocks] = React.useState(
     app.auth.user.customData ? app.auth.user.customData.savedStocks : []
   );
+  const [loggedIn, setLoggedIn] = React.useState(
+    app.auth.user.loggedInProviderType === "anon-user" ? false : true
+  );
+
+  console.log("loggedIn: ", loggedIn);
+
+  const [premiumUser, setPremiumUser] = React.useState(
+    app.auth.user.customData.premiumUser
+  );
+
+  console.log("premiumUser: ", premiumUser);
+
+  React.useEffect(() => {
+    setPremiumUser(app.auth.user.customData.premiumUser);
+  }, [loggedIn, setPremiumUser]);
 
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
@@ -32,8 +47,11 @@ export default function App(props) {
           <h1 id="page-title">Find a Stock</h1>
         </div>
         <div className="utilities">
-          <UpgradeButton />
-          <LoginFields />
+          <UpgradeButton
+            premiumUser={premiumUser}
+            setPremiumUser={setPremiumUser}
+          />
+          <LoginFields loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
         </div>
       </div>
       <div className="search-area">
