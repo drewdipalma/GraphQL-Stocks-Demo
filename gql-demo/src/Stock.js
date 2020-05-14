@@ -28,7 +28,7 @@ export default class Stock extends React.Component {
     return this.state.expanded ? (
       <ExpandedStock
         stock={this.props.stock}
-        shortDescription={this.shortenDescription(this.props.stock.description)}
+        shortDescription={this.props.stock.description && this.shortenDescription(this.props.stock.description)}
         toggleExpand={this.toggleExpand}
       />
     ) : (
