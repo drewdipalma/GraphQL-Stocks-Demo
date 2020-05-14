@@ -15,21 +15,27 @@ export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
 
   // State for Saved Stocks set based on user's custom data 
-  console.log("Pre-stocks");
-  console.log(app);
   const [savedStocks, setSavedStocks] = React.useState(
-    Stitch.hasAppClient(APP_ID) ? app.auth.user.customData.savedStocks : []
+    app.auth.user && app.auth.user.customData ? app.auth.user.customData.savedStocks : []
   );
 
   // State for Log-in, based on Anonymous vs non-Anonymous authentication
   const [loggedIn, setLoggedIn] = React.useState(
-    app.auth.user.loggedInProviderType === "anon-user" ? false : true
+    app.auth.user && app.auth.user.loggedInProviderType === "anon-user" ? false : true
   );
 
   // State for whether the user is a "Premium User"
   const [premiumUser, setPremiumUser] = React.useState(
-    app.auth.user.customData.premiumUser ? true : false
+    app.auth.user && app.auth.user.customData.premiumUser ? true : false
   );
+
+    // Get Stock via GraphQL and update 'stock' value
+    // TO DO: Update to a Hook?
+    const { loading, error, data } = useQuery(FIND_STOCK, {
+      variables: { query: { ticker: searchText } },
+    });
+  
+    const stock = data ? data.RecordWithPrice : null;
 
   // Update the custom data by re-freshing the Token on Login/Upgrade
   React.useEffect(() => {
@@ -44,13 +50,6 @@ export default function App(props) {
       console.log("Issue refreshing Custom Data:", error);
     }
   }, [loggedIn, setLoggedIn, premiumUser, setPremiumUser]);
-
-  // Get Stock via GraphQL and update 'stock' value
-  const { loading, error, data } = useQuery(FIND_STOCK, {
-    variables: { query: { ticker: searchText } },
-  });
-
-  const stock = data ? data.RecordWithPrice : null;
 
   return (
     <div className="App">

@@ -11,7 +11,6 @@ query RecordWithPrice($query: RecordWithPriceInputType!){
     website
     ceo
     exchange
-    marketCap
     sector
     industryTagA
     industryTagB
