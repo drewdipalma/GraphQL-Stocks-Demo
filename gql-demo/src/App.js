@@ -11,7 +11,7 @@ import {AnonymousCredential, UserPasswordCredential} from "mongodb-stitch-browse
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
-  
+
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
   });
@@ -37,8 +37,10 @@ export default function App(props) {
 
   const stock = data ? data.RecordWithPrice : null;
 
-  let savedStocks = app.auth.user.customData ? app.auth.user.customData.savedStocks: [];
-  console.log(savedStocks)
+  let savedStocks = app.auth.user.customData
+    ? app.auth.user.customData.savedStocks
+    : [];
+  console.log(savedStocks);
 
   return (
     <div className="App">
@@ -47,7 +49,8 @@ export default function App(props) {
           <h1 id="page-title">Find a Stock</h1>
         </div>
         <div className="utilities">
-          <button className="utilities-elem " onClick={() => updateUser()}>
+          <UpgradeButton className="utilities-elem" onClick={updateUser} />
+          {/* <button className="utilities-elem " onClick={() => updateUser()}>
             Upgrade
           </button>
           <button className="utilities-elem " onClick={() => loginUser()}>
@@ -81,9 +84,11 @@ export default function App(props) {
         {stock && <Stock stock={stock} />}
       </div>
       <div className="saved-stocks">
-        {savedStocks && (savedStocks.map((stock) => {
-          return <SavedStock stock={stock} />;
-        }))}
+        {stock
+          ? savedStocks.map((stock) => {
+              return <SavedStock stock={stock} />;
+            })
+          : ""}
       </div>
     </div>
   );
