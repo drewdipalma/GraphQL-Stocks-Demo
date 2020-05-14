@@ -86,6 +86,7 @@ code {
   align-content: center;
   width: 80%;
   border: 3px solid #13aa52;
+  margin: 5px 0px 5px 0px;
 }
 
 .stock:hover {
@@ -104,12 +105,14 @@ code {
   border: 3px solid #13aa52;
   height: 200px;
   width: 80%;
+  margin: 5px 0px 5px 0px;
 }
 
 .expanded-wrapper > .stock {
   background-color: #83dba7;
   border: none;
   width: 100%;
+  margin: 0px;
 }
 
 .expanded-wrapper > .stock:hover {
@@ -159,3 +162,24 @@ p {
   display: flex;
   align-items: center;
 }
+
+button {
+  padding: 3px 5px;
+  margin: 5px;
+  font-size: 11px;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+  box-shadow: 3px 3px gray;
+  background-color: white;
+}
+
+button:active {
+  background-color: lightgray;
+  box-shadow: 3px 3px black;
+  transform: translateY(2px) translateX(2px);
+}
+
+/* button:focus {
+  outline: #fed18c groove 2px;
+} */

@@ -1,20 +1,20 @@
 import "./index.css";
 import * as React from "react";
-import {app} from "./index";
+import { app } from "./index";
 import Stock from "./components/Stock";
 import SavedStock from "./components/SavedStock";
 import LoginFields from "./components/LoginFields";
 import UpgradeButton from "./components/UpgradeButton";
-import {useQuery} from "@apollo/react-hooks";
-import {FIND_STOCK} from "./graphql-operations";
-
+import { useQuery } from "@apollo/react-hooks";
+import { FIND_STOCK } from "./graphql-operations";
+import { Stitch, AnonymousCredential } from "mongodb-stitch-browser-sdk";
+export const APP_ID = "gql-stock-backend-svphb";
 
 export default function App(props) {
-  
-  // State for Search Text, set by default to MongoDB 
+  // State for Search Text, set by default to MongoDB
   const [searchText, setSearchText] = React.useState("MDB");
 
-  // State for Saved Stocks set based on user's custom data 
+  // State for Saved Stocks set based on user's custom data
   console.log("Pre-stocks");
   console.log(app);
   const [savedStocks, setSavedStocks] = React.useState(
@@ -34,13 +34,13 @@ export default function App(props) {
   // Update the custom data by re-freshing the Token on Login/Upgrade
   React.useEffect(() => {
     try {
-        async function getCustomData() {
-          await app.auth.refreshAccessToken();
-          setPremiumUser(app.auth.user.customData.premiumUser);
-          setSavedStocks(app.auth.user.customData.savedStocks);
-        }
-        getCustomData();
-      } catch (error) {
+      async function getCustomData() {
+        await app.auth.refreshAccessToken();
+        setPremiumUser(app.auth.user.customData.premiumUser);
+        setSavedStocks(app.auth.user.customData.savedStocks);
+      }
+      getCustomData();
+    } catch (error) {
       console.log("Issue refreshing Custom Data:", error);
     }
   }, [loggedIn, setLoggedIn, premiumUser, setPremiumUser]);
@@ -60,14 +60,12 @@ export default function App(props) {
           {premiumUser ? <span id="premium-flag"> Premium</span> : ""}
         </div>
         <div className="utilities">
-          
           <LoginFields loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
           <UpgradeButton
             premiumUser={premiumUser}
             setPremiumUser={setPremiumUser}
             loggedIn={loggedIn}
           />
-
         </div>
       </div>
       <div className="search-area">
@@ -76,7 +74,7 @@ export default function App(props) {
           <input
             className="fancy-input"
             value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
+            onChange={(e) => setSearchText(e.target.value.toUpperCase())}
             type="text"
           />
         </div>
