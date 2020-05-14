@@ -49,14 +49,17 @@ export default function ExpandedStock(props) {
           <h2 className="stock-name">{stock.shortName}</h2>
           <div className="stock-ticker">Ticker: {stock._id}</div>
         </div>
-        <div className="expand-arrow">-</div>
-      </div>
-      <div className="prem-data-section">
-        <div className="prem-data-col right">
+        <div id="current-price-field">
           <div className="data-field">
             <h4>Latest Price: </h4>
             <div className="data">${stock.latestPrice}</div>
           </div>
+        </div>
+        <div className="expand-arrow">-</div>
+      </div>
+      <div className="prem-data-section">
+        <div className="prem-data-col left">
+          You must be a premium user to see more information.
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import * as React from "react";
 import Stock from "./components/Stock";
 import LoginButton from "./components/LoginButton";
 import SavedStock from "./components/SavedStock";
-import { app } from "./index";
+import { app, client } from "./index";
 import UpgradeButton from "./components/UpgradeButton";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { FIND_STOCK } from "./graphql-operations";
@@ -14,6 +14,8 @@ import {
 import LoginFields from "./components/LoginFields";
 
 export default function App(props) {
+  // console.log("app.auth.user.customData in App.js: ", app.auth.user);
+
   const [searchText, setSearchText] = React.useState("MDB");
   const [savedStocks, setSavedStocks] = React.useState(
     app.auth.user.customData ? app.auth.user.customData.savedStocks : []
@@ -21,18 +23,24 @@ export default function App(props) {
   const [loggedIn, setLoggedIn] = React.useState(
     app.auth.user.loggedInProviderType === "anon-user" ? false : true
   );
-
-  console.log("loggedIn: ", loggedIn);
-
   const [premiumUser, setPremiumUser] = React.useState(
-    app.auth.user.customData.premiumUser
+    app.auth.user.customData.premiumUser ? true : false
   );
-
+  console.log("saved stocks: ", savedStocks);
+  console.log("loggedIn: ", loggedIn);
   console.log("premiumUser: ", premiumUser);
 
   React.useEffect(() => {
-    setPremiumUser(app.auth.user.customData.premiumUser);
+    async function getCustomData() {
+      await app.auth.refreshAccessToken();
+      setPremiumUser(app.auth.user.customData.premiumUser);
+    }
+    getCustomData();
   }, [loggedIn, setPremiumUser]);
+
+  React.useEffect(() => {
+    setSavedStocks(app.auth.user.customData.savedStocks);
+  }, [premiumUser]);
 
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
@@ -47,11 +55,12 @@ export default function App(props) {
           <h1 id="page-title">Find a Stock</h1>
         </div>
         <div className="utilities">
+          <LoginFields loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
           <UpgradeButton
             premiumUser={premiumUser}
             setPremiumUser={setPremiumUser}
+            loggedIn={loggedIn}
           />
-          <LoginFields loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
         </div>
       </div>
       <div className="search-area">
