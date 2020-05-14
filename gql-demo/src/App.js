@@ -80,12 +80,12 @@ export default function App(props) {
         </div>
       </div>
       <div className="search-result-area">
-        {stock && <Stock stock={stock} />}
+        {stock && <Stock stock={stock} setSavedStocks={setSavedStocks} />}
       </div>
       <div className="saved-stocks">
         {savedStocks &&
           savedStocks.map((stock) => {
-            return <SavedStock stock={stock} />;
+            return <SavedStock stock={stock} setSavedStocks={setSavedStocks} />;
           })}
       </div>
     </div>

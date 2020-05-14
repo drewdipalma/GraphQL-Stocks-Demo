@@ -1,8 +1,34 @@
 import * as React from "react";
+import { app, client } from "../index";
+import { UPDATE_USER } from "../graphql-operations";
+import { useMutation } from "@apollo/react-hooks";
 
 export default function ExpandedStock(props) {
-  const { stock, shortDescription, toggleExpand } = props;
+  const { stock, shortDescription, toggleExpand, setSavedStocks } = props;
   console.log(stock);
+
+  const [addStock, { loading: updating }] = useMutation(UPDATE_USER);
+
+  const updateSavedStocks = async (e) => {
+    console.log("foo");
+    await addStock({
+      variables: {
+        query: { _id: app.auth.user.id },
+        set: {
+          savedStocks: [
+            ...app.auth.user.customData.savedStocks,
+            e.target.value,
+          ],
+        },
+      },
+    });
+
+    client.resetStore();
+    await app.auth.refreshAccessToken();
+    console.log("app.auth.user.customData", app.auth.user.customData);
+    setSavedStocks(app.auth.user.customData.savedStocks);
+  };
+
   return stock.isPremium ? (
     <div className="expanded-wrapper">
       <div className="stock" onClick={toggleExpand}>
@@ -37,7 +63,9 @@ export default function ExpandedStock(props) {
             </div>
           </div>
           <div className="data-field">
-            <button>Save</button>
+            <button value={stock._id} onClick={updateSavedStocks}>
+              Save
+            </button>
           </div>
         </div>
       </div>

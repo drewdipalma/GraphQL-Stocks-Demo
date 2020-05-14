@@ -33,6 +33,7 @@ export default class Stock extends React.Component {
           this.shortenDescription(this.props.stock.description)
         }
         toggleExpand={this.toggleExpand}
+        setSavedStocks={this.props.setSavedStocks}
       />
     ) : (
       <div className="stock" onClick={this.toggleExpand}>
