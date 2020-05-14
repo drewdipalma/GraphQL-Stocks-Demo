@@ -29,7 +29,6 @@ async function getAccessToken() {
 // Add an Authorization header with a valid user access token to all requests
 const authorizationHeaderLink = setContext(async (_, { headers }) => {
   const accessToken = await getAccessToken();
-  console.log(app.auth.user);
   return {
     headers: {
       ...headers,
@@ -43,7 +42,7 @@ const graphql_url = `https://stitch.mongodb.com/api/client/v2.0/app/${APP_ID}/gr
 const httpLink = new HttpLink({ uri: graphql_url });
 
 // Construct a new Apollo client with the links we just defined
-const client = new ApolloClient({
+export const client = new ApolloClient({
   link: authorizationHeaderLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
