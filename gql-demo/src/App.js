@@ -7,6 +7,7 @@ import { app } from "./index";
 import UpgradeButton from "./UpgradeButton";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { FIND_STOCK, UPDATE_USER } from "./graphql-operations";
+import {AnonymousCredential, UserPasswordCredential} from "mongodb-stitch-browser-sdk";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
@@ -18,7 +19,7 @@ export default function App(props) {
   const [upgradeUser, { loading: updating }] = useMutation(UPDATE_USER);
 
   const updateUser = async () => {
-    let response = await upgradeUser({
+    await upgradeUser({
       variables: {
         query: { _id: app.auth.user.id },
         set: { premiumUser: !app.auth.user.customData.premiumUser },
@@ -26,6 +27,12 @@ export default function App(props) {
     });
 
     await app.auth.refreshAccessToken();
+  };
+
+  const loginUser = async () => {
+      app.auth.user.loggedInProviderType === 'anon-user' ? 
+      await app.auth.loginWithCredential(new UserPasswordCredential("foo@bar.com", "Password")):
+      await app.auth.loginWithCredential(new AnonymousCredential())
   };
 
   const stock = data ? data.RecordWithPrice : null;
@@ -43,7 +50,9 @@ export default function App(props) {
           <button className="utilities-elem " onClick={() => updateUser()}>
             Upgrade
           </button>
-          <LoginButton />
+          <button className="utilities-elem " onClick={() => loginUser()}>
+            {app.auth.user.loggedInProviderType === 'anon-user'? 'Log In' : "Log out"}
+          </button>
         </div>
       </div>
       <div className="search-area">
@@ -72,9 +81,9 @@ export default function App(props) {
         {stock && <Stock stock={stock} />}
       </div>
       <div className="saved-stocks">
-        {stock ? (savedStocks.map((stock) => {
+        {savedStocks && (savedStocks.map((stock) => {
           return <SavedStock stock={stock} />;
-        })) : ""}
+        }))}
       </div>
     </div>
   );
