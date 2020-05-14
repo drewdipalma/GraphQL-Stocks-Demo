@@ -7,11 +7,17 @@ import { app } from "./index";
 import UpgradeButton from "./UpgradeButton";
 import { useQuery, useMutation } from "@apollo/react-hooks";
 import { FIND_STOCK } from "./graphql-operations";
-import {AnonymousCredential, UserPasswordCredential} from "mongodb-stitch-browser-sdk";
+import {
+  AnonymousCredential,
+  UserPasswordCredential,
+} from "mongodb-stitch-browser-sdk";
+import LoginFields from "./LoginFields";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
-  const [savedStocks, setSavedStocks] = React.useState(app.auth.user.customData ? app.auth.user.customData.savedStocks : []);
+  const [savedStocks, setSavedStocks] = React.useState(
+    app.auth.user.customData ? app.auth.user.customData.savedStocks : []
+  );
 
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
@@ -27,7 +33,7 @@ export default function App(props) {
         </div>
         <div className="utilities">
           <UpgradeButton />
-          <LoginButton />
+          <LoginFields />
         </div>
       </div>
       <div className="search-area">
@@ -45,7 +51,10 @@ export default function App(props) {
         {stock && <Stock stock={stock} />}
       </div>
       <div className="saved-stocks">
-        {savedStocks && savedStocks.map((stock) => {return <SavedStock stock={stock} />;})}
+        {savedStocks &&
+          savedStocks.map((stock) => {
+            return <SavedStock stock={stock} />;
+          })}
       </div>
     </div>
   );
