@@ -31,16 +31,20 @@ export default function App(props) {
   console.log("premiumUser: ", premiumUser);
 
   React.useEffect(() => {
-    async function getCustomData() {
-      await app.auth.refreshAccessToken();
-      setPremiumUser(app.auth.user.customData.premiumUser);
+    try {
+      async function getCustomData() {
+        await app.auth.refreshAccessToken();
+        setPremiumUser(app.auth.user.customData.premiumUser);
+        getCustomData();
+      }
+    } catch (error) {
+      console.log("Something went wrong:", error);
     }
-    getCustomData();
   }, [loggedIn, setPremiumUser]);
 
   React.useEffect(() => {
     setSavedStocks(app.auth.user.customData.savedStocks);
-  }, [premiumUser]);
+  }, [premiumUser, loggedIn]);
 
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
@@ -52,7 +56,8 @@ export default function App(props) {
     <div className="App">
       <div className="header">
         <div id="main-title-area">
-          <h1 id="page-title">Find a Stock</h1>
+          <h1 id="page-title">Find a Stock</h1>{" "}
+          {premiumUser ? <span id="premium-flag"> Premium</span> : ""}
         </div>
         <div className="utilities">
           <LoginFields loggedIn={loggedIn} setLoggedIn={setLoggedIn} />

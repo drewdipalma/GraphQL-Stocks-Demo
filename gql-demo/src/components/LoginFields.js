@@ -30,6 +30,8 @@ export default function LoginFields(props) {
       setLoggedIn(
         app.auth.user.loggedInProviderType === "anon-user" ? false : true
       );
+      setUsername("");
+      setPassword("");
     } catch (error) {
       console.log(error);
     }
