@@ -1,10 +1,10 @@
 import * as React from "react";
 import ExpandedStock from "./ExpandedStock";
-import { app } from "./index.js";
+import { app } from "../index.js";
 
 export default class Stock extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = {
       expanded: false,
       shortDescription: "",
@@ -28,8 +28,12 @@ export default class Stock extends React.Component {
     return this.state.expanded ? (
       <ExpandedStock
         stock={this.props.stock}
-        shortDescription={this.props.stock.description && this.shortenDescription(this.props.stock.description)}
+        shortDescription={
+          this.props.stock.description &&
+          this.shortenDescription(this.props.stock.description)
+        }
         toggleExpand={this.toggleExpand}
+        setSavedStocks={this.props.setSavedStocks}
       />
     ) : (
       <div className="stock" onClick={this.toggleExpand}>

@@ -1,25 +1,21 @@
 import React from "react";
-import { app } from "./index";
+import { app } from "../index";
 import {
   AnonymousCredential,
   UserPasswordCredential,
 } from "mongodb-stitch-browser-sdk";
 
-export default function LoginFields() {
-  const [loggedIn, setLoggedIn] = React.useState(
-    app.auth.user.loggedInProviderType === "anon-user" ? false : true
-  );
+export default function LoginFields(props) {
+  const { loggedIn, setLoggedIn } = props;
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   async function handleLogin(event) {
     try {
       event.preventDefault();
-      loggedIn
-        ? await app.auth.loginWithCredential(new AnonymousCredential())
-        : await app.auth.loginWithCredential(
-            new UserPasswordCredential(username, password)
-          );
+      await app.auth.loginWithCredential(
+        new UserPasswordCredential(username, password)
+      );
       setLoggedIn(
         app.auth.user.loggedInProviderType === "anon-user" ? false : true
       );
@@ -30,14 +26,12 @@ export default function LoginFields() {
 
   async function handleLogout() {
     try {
-      loggedIn
-        ? await app.auth.loginWithCredential(new AnonymousCredential())
-        : await app.auth.loginWithCredential(
-            new UserPasswordCredential(username, password)
-          );
+      await app.auth.loginWithCredential(new AnonymousCredential());
       setLoggedIn(
         app.auth.user.loggedInProviderType === "anon-user" ? false : true
       );
+      setUsername("");
+      setPassword("");
     } catch (error) {
       console.log(error);
     }

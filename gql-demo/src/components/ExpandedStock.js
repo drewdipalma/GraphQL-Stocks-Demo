@@ -1,8 +1,34 @@
 import * as React from "react";
+import { app, client } from "../index";
+import { UPDATE_USER } from "../graphql-operations";
+import { useMutation } from "@apollo/react-hooks";
 
 export default function ExpandedStock(props) {
-  const { stock, shortDescription, toggleExpand } = props;
+  const { stock, shortDescription, toggleExpand, setSavedStocks } = props;
   console.log(stock);
+
+  const [addStock, { loading: updating }] = useMutation(UPDATE_USER);
+
+  const updateSavedStocks = async (e) => {
+    console.log("foo");
+    await addStock({
+      variables: {
+        query: { _id: app.auth.user.id },
+        set: {
+          savedStocks: [
+            ...app.auth.user.customData.savedStocks,
+            e.target.value,
+          ],
+        },
+      },
+    });
+
+    client.resetStore();
+    await app.auth.refreshAccessToken();
+    console.log("app.auth.user.customData", app.auth.user.customData);
+    setSavedStocks(app.auth.user.customData.savedStocks);
+  };
+
   return stock.isPremium ? (
     <div className="expanded-wrapper">
       <div className="stock" onClick={toggleExpand}>
@@ -37,7 +63,9 @@ export default function ExpandedStock(props) {
             </div>
           </div>
           <div className="data-field">
-            <button>Save</button>
+            <button value={stock._id} onClick={updateSavedStocks}>
+              Save
+            </button>
           </div>
         </div>
       </div>
@@ -49,14 +77,17 @@ export default function ExpandedStock(props) {
           <h2 className="stock-name">{stock.shortName}</h2>
           <div className="stock-ticker">Ticker: {stock._id}</div>
         </div>
-        <div className="expand-arrow">-</div>
-      </div>
-      <div className="prem-data-section">
-        <div className="prem-data-col right">
+        <div id="current-price-field">
           <div className="data-field">
             <h4>Latest Price: </h4>
             <div className="data">${stock.latestPrice}</div>
           </div>
+        </div>
+        <div className="expand-arrow">-</div>
+      </div>
+      <div className="prem-data-section">
+        <div className="prem-data-col left">
+          You must be a premium user to see more information.
         </div>
       </div>
     </div>
