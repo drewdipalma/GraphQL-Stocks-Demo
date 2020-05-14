@@ -1,6 +1,6 @@
 import "./index.css";
 import * as React from "react";
-import {app} from "./index";
+import {app, client} from "./index";
 import Stock from "./components/Stock";
 import SavedStock from "./components/SavedStock";
 import LoginFields from "./components/LoginFields";
@@ -43,7 +43,7 @@ export default function App(props) {
         async function getCustomData() {
           await app.auth.refreshAccessToken();
           setPremiumUser(app.auth.user.customData.premiumUser);
-          setSavedStocks(app.auth.user.customData.savedStocks);
+          setSavedStocks(app.auth.user.customData.premiumUser ? app.auth.user.customData.savedStocks : []);
         }
         getCustomData();
       } catch (error) {
@@ -64,6 +64,7 @@ export default function App(props) {
           <UpgradeButton
             premiumUser={premiumUser}
             setPremiumUser={setPremiumUser}
+            setSavedStocks={setSavedStocks}
             loggedIn={loggedIn}
           />
 
