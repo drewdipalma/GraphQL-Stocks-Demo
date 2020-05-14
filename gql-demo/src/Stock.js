@@ -25,7 +25,6 @@ export default class Stock extends React.Component {
   }
 
   render() {
-    console.log(this.state);
     return this.state.expanded ? (
       <ExpandedStock
         stock={this.props.stock}

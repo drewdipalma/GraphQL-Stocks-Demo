@@ -10,6 +10,7 @@ import { FIND_STOCK, UPDATE_USER } from "./graphql-operations";
 
 export default function App(props) {
   const [searchText, setSearchText] = React.useState("MDB");
+  
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
   });
@@ -25,20 +26,12 @@ export default function App(props) {
     });
 
     await app.auth.refreshAccessToken();
-
-    console.log(app.auth.user.customData.premiumUser);
-
-    console.log(response);
   };
 
   const stock = data ? data.RecordWithPrice : null;
 
-  // console.log(searchText);
-  // console.log(data);
-  // console.log(stock);
-  let savedStocks = ["MDB", "AAP", "MDB", "MDB", "MDB"];
-
-  console.log(savedStocks);
+  let savedStocks = app.auth.user.customData ? app.auth.user.customData.savedStocks: [];
+  console.log(savedStocks)
 
   return (
     <div className="App">
@@ -79,9 +72,9 @@ export default function App(props) {
         {stock && <Stock stock={stock} />}
       </div>
       <div className="saved-stocks">
-        {savedStocks.map((stock) => {
+        {stock ? (savedStocks.map((stock) => {
           return <SavedStock stock={stock} />;
-        })}
+        })) : ""}
       </div>
     </div>
   );
