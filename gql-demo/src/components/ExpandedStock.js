@@ -61,12 +61,6 @@ export default function ExpandedStock(props) {
             <div className="data">${stock.latestPrice.toFixed(2)}</div>
           </div>
           <div className="data-field">
-            <h4>Market Cap: </h4>
-            <div className="data">
-              {stock.marketCap ? stock.marketCap : "N/A"}
-            </div>
-          </div>
-          <div className="data-field">
             <button value={stock._id} onClick={updateSavedStocks}>
               {app.auth.user.customData.savedStocks && app.auth.user.customData.savedStocks.includes(stock._id) ? 'Remove' : 'Save'}
             </button>

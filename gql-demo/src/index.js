@@ -23,17 +23,20 @@ console.log("Initialized");
 async function getAccessToken() {
   try{
     app.auth.user ? await app.auth.refreshAccessToken() : await app.auth.loginWithCredential(new AnonymousCredential());
+    const { accessToken } = app.auth.activeUserAuthInfo;
+
+    console.log("Access Token");
+
+    return accessToken;
   } catch(error) {
     console.log("Issue authenticating user:", error)
   }
-  const { accessToken } = app.auth.activeUserAuthInfo;
-  return accessToken;
 }
 
 // Add an Authorization header with a valid user access token to all requests
 const authorizationHeaderLink = setContext(async (_, { headers }) => {
   const accessToken = await getAccessToken();
-  console.log("Access Token");
+  console.log("Access Token to Apollo");
   return {
     headers: {
       ...headers,
