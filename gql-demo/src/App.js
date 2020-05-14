@@ -10,14 +10,15 @@ import {FIND_STOCK} from "./graphql-operations";
 
 
 export default function App(props) {
-  // console.log("app.auth.user.customData in App.js: ", app.auth.user);
-
+  
   // State for Search Text, set by default to MongoDB 
   const [searchText, setSearchText] = React.useState("MDB");
 
   // State for Saved Stocks set based on user's custom data 
+  console.log("Pre-stocks");
+  console.log(app);
   const [savedStocks, setSavedStocks] = React.useState(
-    app.auth.user.customData ? app.auth.user.customData.savedStocks : []
+    Stitch.hasAppClient(APP_ID) ? app.auth.user.customData.savedStocks : []
   );
 
   // State for Log-in, based on Anonymous vs non-Anonymous authentication
@@ -30,10 +31,6 @@ export default function App(props) {
     app.auth.user.customData.premiumUser ? true : false
   );
 
-  //console.log("saved stocks: ", savedStocks);
-  //console.log("loggedIn: ", loggedIn);
-  //console.log("premiumUser: ", premiumUser);
-
   // Update the custom data by re-freshing the Token on Login/Upgrade
   React.useEffect(() => {
     try {
@@ -44,16 +41,15 @@ export default function App(props) {
         }
         getCustomData();
       } catch (error) {
-      console.log("Something went wrong:", error);
+      console.log("Issue refreshing Custom Data:", error);
     }
-  }, [loggedIn, premiumUser]);
+  }, [loggedIn, setLoggedIn, premiumUser, setPremiumUser]);
 
-  // GraphQL Query to search for stock information
+  // Get Stock via GraphQL and update 'stock' value
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
   });
 
-  // 
   const stock = data ? data.RecordWithPrice : null;
 
   return (
@@ -66,7 +62,6 @@ export default function App(props) {
         <div className="utilities">
           
           <LoginFields loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-
           <UpgradeButton
             premiumUser={premiumUser}
             setPremiumUser={setPremiumUser}

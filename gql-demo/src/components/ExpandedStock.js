@@ -6,26 +6,31 @@ import { useMutation } from "@apollo/react-hooks";
 export default function ExpandedStock(props) {
   const { stock, toggleExpand, setSavedStocks } = props;
 
+  // Add GraphQL mutation necessary for updating saved Stocks via User type
   const [updateStocks, { loading: updating }] = useMutation(UPDATE_USER);
 
-  // Update Saved Stocks
+  // Update saved Stocks via GraphQL 
   const updateSavedStocks = async (e) => {
-    const stockUpdate = app.auth.user.customData.savedStocks.includes(e.target.value) ? app.auth.user.customData.savedStocks.filter(item => item !== e.target.value) : [...app.auth.user.customData.savedStocks,e.target.value, ];
+    try{
+      const stockUpdate = app.auth.user.customData.savedStocks.includes(e.target.value) ? app.auth.user.customData.savedStocks.filter(item => item !== e.target.value) : [...app.auth.user.customData.savedStocks,e.target.value, ];
     
-    await updateStocks({
-      variables: {
-        query: { _id: app.auth.user.id },
-        set: {
-          savedStocks: stockUpdate,
+      await updateStocks({
+        variables: {
+          query: { _id: app.auth.user.id },
+          set: {
+            savedStocks: stockUpdate,
+          },
         },
-      },
-    });
-
-    // Refresh token to get ensure new list of saved Stocks is in custom data
-    await app.auth.refreshAccessToken();
-
-    // Update the state of savedStocks
-    setSavedStocks(app.auth.user.customData.savedStocks);
+      });
+  
+      // Refresh token to get ensure new list of saved Stocks is in custom data
+      await app.auth.refreshAccessToken();
+  
+      // Update the state of savedStocks
+      setSavedStocks(app.auth.user.customData.savedStocks);
+    } catch (error){
+      console.log("Issue with updating saved stocks:", error);
+    }
   };
 
   return stock.isPremium ? (
@@ -63,7 +68,7 @@ export default function ExpandedStock(props) {
           </div>
           <div className="data-field">
             <button value={stock._id} onClick={updateSavedStocks}>
-              {app.auth.user.customData.savedStocks.includes(stock._id) ? 'Remove' : 'Save'}
+              {app.auth.user.customData.savedStocks && app.auth.user.customData.savedStocks.includes(stock._id) ? 'Remove' : 'Save'}
             </button>
           </div>
         </div>

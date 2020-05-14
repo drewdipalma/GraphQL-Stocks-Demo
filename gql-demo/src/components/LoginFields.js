@@ -6,10 +6,12 @@ import {
 } from "mongodb-stitch-browser-sdk";
 
 export default function LoginFields(props) {
+  // Set-up state for Username/Password
   const { loggedIn, setLoggedIn } = props;
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const [username, setUsername] = React.useState("foo@bar.com");
+  const [password, setPassword] = React.useState("Password");
 
+  // Handle Login
   async function handleLogin(event) {
     try {
       event.preventDefault();
@@ -20,22 +22,24 @@ export default function LoginFields(props) {
         app.auth.user.loggedInProviderType === "anon-user" ? false : true
       );
     } catch (error) {
-      console.log(error);
+      console.log("Issue with user Login:", error);
     }
   }
 
+  // Handle Logout 
   async function handleLogout() {
     try {
       await app.auth.loginWithCredential(new AnonymousCredential());
       setLoggedIn(
         app.auth.user.loggedInProviderType === "anon-user" ? false : true
       );
-      setUsername("");
-      setPassword("");
+      setUsername("foo@bar.com");
+      setPassword("Password");
     } catch (error) {
-      console.log(error);
+      console.log("Issue with user Logout:", error);
     }
   }
+
 
   return loggedIn ? (
     <button onClick={handleLogout}>Logout</button>

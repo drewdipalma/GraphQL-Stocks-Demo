@@ -9,11 +9,13 @@ export default class Stock extends React.Component {
     this.toggleExpand = this.toggleExpand.bind(this);
   }
 
+  // Toggles Stock expanded view
   toggleExpand() {
     this.setState({ expanded: !this.state.expanded });
   }
 
   render() {
+    // Show either the Basic or Expanded views of the Stock
     return this.state.expanded ? (
       <ExpandedStock
         stock={this.props.stock}
@@ -29,7 +31,7 @@ export default class Stock extends React.Component {
         <div id="current-price-field">
           <div className="data-field">
             <h4>Latest Price: </h4>
-            <div className="data">${this.props.stock.latestPrice}</div>
+            <div className="data">${this.props.stock.latestPrice.toFixed(2)}</div>
           </div>
         </div>
         <div className="expand-arrow">+</div>

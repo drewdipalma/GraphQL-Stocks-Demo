@@ -6,8 +6,7 @@ import { ApolloClient, HttpLink, InMemoryCache } from "apollo-boost";
 import { setContext } from "apollo-link-context";
 import { ApolloProvider } from "@apollo/react-hooks";
 // Stitch
-import { Stitch, AnonymousCredential, UserPasswordAuthProviderClient,
-  UserPasswordCredential} from "mongodb-stitch-browser-sdk";
+import { Stitch, AnonymousCredential} from "mongodb-stitch-browser-sdk";
 // Check out app.js for examples of how to run GraphQL operations
 import App from "./App";
 
@@ -18,10 +17,15 @@ export const app = Stitch.hasAppClient(APP_ID)
   ? Stitch.getAppClient(APP_ID)
   : Stitch.initializeAppClient(APP_ID);
 
+console.log("Initialized");
+
 // Get the logged in user's access token from the StitchAuth interface
 async function getAccessToken() {
-  app.auth.user ? await app.auth.refreshAccessToken() : await app.auth.loginWithCredential(new AnonymousCredential());
-  
+  try{
+    app.auth.user ? await app.auth.refreshAccessToken() : await app.auth.loginWithCredential(new AnonymousCredential());
+  } catch(error) {
+    console.log("Issue authenticating user:", error)
+  }
   const { accessToken } = app.auth.activeUserAuthInfo;
   return accessToken;
 }
@@ -29,6 +33,7 @@ async function getAccessToken() {
 // Add an Authorization header with a valid user access token to all requests
 const authorizationHeaderLink = setContext(async (_, { headers }) => {
   const accessToken = await getAccessToken();
+  console.log("Access Token");
   return {
     headers: {
       ...headers,
