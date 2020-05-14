@@ -27,7 +27,7 @@ export default function UpgradeButton(props) {
 
   // console.log("app.auth.user.customData: ", app.auth.user.customData);
 
-  return premiumUser ? (
+  return premiumUser && loggedIn ? (
     <button className="utilities-elem" onClick={updateUser}>
       Downgrade
     </button>
