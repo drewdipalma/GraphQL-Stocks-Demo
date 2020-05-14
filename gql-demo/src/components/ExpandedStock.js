@@ -1,31 +1,30 @@
 import * as React from "react";
-import { app, client } from "../index";
+import { app } from "../index";
 import { UPDATE_USER } from "../graphql-operations";
 import { useMutation } from "@apollo/react-hooks";
 
 export default function ExpandedStock(props) {
-  const { stock, shortDescription, toggleExpand, setSavedStocks } = props;
-  console.log(stock);
+  const { stock, toggleExpand, setSavedStocks } = props;
 
-  const [addStock, { loading: updating }] = useMutation(UPDATE_USER);
+  const [updateStocks, { loading: updating }] = useMutation(UPDATE_USER);
 
+  // Update Saved Stocks
   const updateSavedStocks = async (e) => {
-    console.log("foo");
-    await addStock({
+    const stockUpdate = app.auth.user.customData.savedStocks.includes(e.target.value) ? app.auth.user.customData.savedStocks.filter(item => item !== e.target.value) : [...app.auth.user.customData.savedStocks,e.target.value, ];
+    
+    await updateStocks({
       variables: {
         query: { _id: app.auth.user.id },
         set: {
-          savedStocks: [
-            ...app.auth.user.customData.savedStocks,
-            e.target.value,
-          ],
+          savedStocks: stockUpdate,
         },
       },
     });
 
-    client.resetStore();
+    // Refresh token to get ensure new list of saved Stocks is in custom data
     await app.auth.refreshAccessToken();
-    console.log("app.auth.user.customData", app.auth.user.customData);
+
+    // Update the state of savedStocks
     setSavedStocks(app.auth.user.customData.savedStocks);
   };
 
@@ -41,7 +40,7 @@ export default function ExpandedStock(props) {
       <div className="prem-data-section">
         <div className="prem-data-col left">
           <h4>Description:</h4>
-          <p>{shortDescription}</p>
+          <p>{stock.description.split(" ").slice(0, 10).join(" ") + "..."}</p>
           <div className="data-field">
             <h4>Industry: </h4>
             <div className="data">{stock.industry}</div>
@@ -54,7 +53,7 @@ export default function ExpandedStock(props) {
         <div className="prem-data-col right">
           <div className="data-field">
             <h4>Latest Price: </h4>
-            <div className="data">${stock.latestPrice}</div>
+            <div className="data">${stock.latestPrice.toFixed(2)}</div>
           </div>
           <div className="data-field">
             <h4>Market Cap: </h4>
@@ -64,7 +63,7 @@ export default function ExpandedStock(props) {
           </div>
           <div className="data-field">
             <button value={stock._id} onClick={updateSavedStocks}>
-              Save
+              {app.auth.user.customData.savedStocks.includes(stock._id) ? 'Remove' : 'Save'}
             </button>
           </div>
         </div>
@@ -80,7 +79,7 @@ export default function ExpandedStock(props) {
         <div id="current-price-field">
           <div className="data-field">
             <h4>Latest Price: </h4>
-            <div className="data">${stock.latestPrice}</div>
+            <div className="data">${stock.latestPrice.toFixed(2)}</div>
           </div>
         </div>
         <div className="expand-arrow">-</div>

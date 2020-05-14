@@ -1,55 +1,59 @@
 import "./index.css";
 import * as React from "react";
+import {app} from "./index";
 import Stock from "./components/Stock";
-import LoginButton from "./components/LoginButton";
 import SavedStock from "./components/SavedStock";
-import { app, client } from "./index";
-import UpgradeButton from "./components/UpgradeButton";
-import { useQuery, useMutation } from "@apollo/react-hooks";
-import { FIND_STOCK } from "./graphql-operations";
-import {
-  AnonymousCredential,
-  UserPasswordCredential,
-} from "mongodb-stitch-browser-sdk";
 import LoginFields from "./components/LoginFields";
+import UpgradeButton from "./components/UpgradeButton";
+import {useQuery} from "@apollo/react-hooks";
+import {FIND_STOCK} from "./graphql-operations";
+
 
 export default function App(props) {
   // console.log("app.auth.user.customData in App.js: ", app.auth.user);
 
+  // State for Search Text, set by default to MongoDB 
   const [searchText, setSearchText] = React.useState("MDB");
+
+  // State for Saved Stocks set based on user's custom data 
   const [savedStocks, setSavedStocks] = React.useState(
     app.auth.user.customData ? app.auth.user.customData.savedStocks : []
   );
+
+  // State for Log-in, based on Anonymous vs non-Anonymous authentication
   const [loggedIn, setLoggedIn] = React.useState(
     app.auth.user.loggedInProviderType === "anon-user" ? false : true
   );
+
+  // State for whether the user is a "Premium User"
   const [premiumUser, setPremiumUser] = React.useState(
     app.auth.user.customData.premiumUser ? true : false
   );
-  console.log("saved stocks: ", savedStocks);
-  console.log("loggedIn: ", loggedIn);
-  console.log("premiumUser: ", premiumUser);
 
+  //console.log("saved stocks: ", savedStocks);
+  //console.log("loggedIn: ", loggedIn);
+  //console.log("premiumUser: ", premiumUser);
+
+  // Update the custom data by re-freshing the Token on Login/Upgrade
   React.useEffect(() => {
     try {
-      async function getCustomData() {
-        await app.auth.refreshAccessToken();
-        setPremiumUser(app.auth.user.customData.premiumUser);
+        async function getCustomData() {
+          await app.auth.refreshAccessToken();
+          setPremiumUser(app.auth.user.customData.premiumUser);
+          setSavedStocks(app.auth.user.customData.savedStocks);
+        }
         getCustomData();
-      }
-    } catch (error) {
+      } catch (error) {
       console.log("Something went wrong:", error);
     }
-  }, [loggedIn, setPremiumUser]);
+  }, [loggedIn, premiumUser]);
 
-  React.useEffect(() => {
-    setSavedStocks(app.auth.user.customData.savedStocks);
-  }, [premiumUser, loggedIn]);
-
+  // GraphQL Query to search for stock information
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
   });
 
+  // 
   const stock = data ? data.RecordWithPrice : null;
 
   return (
@@ -60,12 +64,15 @@ export default function App(props) {
           {premiumUser ? <span id="premium-flag"> Premium</span> : ""}
         </div>
         <div className="utilities">
+          
           <LoginFields loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+
           <UpgradeButton
             premiumUser={premiumUser}
             setPremiumUser={setPremiumUser}
             loggedIn={loggedIn}
           />
+
         </div>
       </div>
       <div className="search-area">

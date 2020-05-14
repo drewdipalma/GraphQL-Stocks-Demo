@@ -1,37 +1,22 @@
 import * as React from "react";
 import ExpandedStock from "./ExpandedStock";
-import { app } from "../index.js";
 
 export default class Stock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      expanded: false,
-      shortDescription: "",
-    };
+    this.state = {expanded: false};
 
     this.toggleExpand = this.toggleExpand.bind(this);
-    this.shortenDescription = this.shortenDescription.bind(this);
   }
 
   toggleExpand() {
     this.setState({ expanded: !this.state.expanded });
   }
 
-  shortenDescription(stockDescription) {
-    if (app.auth.user.customData.premiumUser) {
-      return stockDescription.split(" ").slice(0, 10).join(" ") + "...";
-    }
-  }
-
   render() {
     return this.state.expanded ? (
       <ExpandedStock
         stock={this.props.stock}
-        shortDescription={
-          this.props.stock.description &&
-          this.shortenDescription(this.props.stock.description)
-        }
         toggleExpand={this.toggleExpand}
         setSavedStocks={this.props.setSavedStocks}
       />

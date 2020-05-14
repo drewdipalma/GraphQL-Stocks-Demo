@@ -1,6 +1,4 @@
 import * as React from "react";
-import ExpandedStock from "./ExpandedStock";
-import { app } from "../index.js";
 import Stock from "./Stock";
 import { FIND_STOCK } from "../graphql-operations";
 import { useQuery, useMutation } from "@apollo/react-hooks";
