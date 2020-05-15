@@ -25,8 +25,8 @@ code {
 }
 
 .header {
-  background-color: #5a4fcf;
-  height: 13%;
+  background-color: #157145;
+  min-height: 13%;
   display: flex;
   align-items: center;
   color: #f9fbfa;
@@ -54,15 +54,16 @@ code {
 }
 
 .search-area {
-  height: 10%;
-  border: 3px solid #9795f9;
+  height: 75px;
+  border: 3px solid #13aa52;
   display: flex;
   flex-flow: column;
   justify-content: center;
 }
 
 .subheading,
-.title-input {
+.title-input,
+#premium-flag {
   margin-left: 15px;
 }
 
@@ -74,22 +75,39 @@ code {
 }
 
 .search-result-area {
-  height: 210px;
+  min-height: 210px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.saved-stocks {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+
+.section-header {
+  align-self: flex-start;
+  margin-left: 5%;
+  margin-bottom: 5px;
 }
 
 .stock {
-  background-color: #b9eacd;
+  background-color: #d1faff;
   height: 75px;
   padding: 5px 15px 5px 15px;
   display: flex;
   justify-content: space-between;
   align-content: center;
-  width: 80%;
+  width: 90%;
   border: 3px solid #13aa52;
+  margin: 5px 0px 5px 0px;
 }
 
 .stock:hover {
-  background-color: #83dba7;
+  background-color: #157145;
+  color: #f9fbfa;
 }
 
 .stock-name {
@@ -102,18 +120,21 @@ code {
 
 .expanded-wrapper {
   border: 3px solid #13aa52;
-  height: 200px;
-  width: 80%;
+  height: auto;
+  width: 90%;
+  margin: 5px 0px 5px 0px;
 }
 
 .expanded-wrapper > .stock {
-  background-color: #83dba7;
+  background-color: #157145;
+  color: #f9fbfa;
   border: none;
   width: 100%;
+  margin: 0px;
 }
 
 .expanded-wrapper > .stock:hover {
-  background-color: #b9eacd;
+  background-color: #13aa52;
 }
 
 .stock-header {
@@ -133,7 +154,7 @@ p {
 
 .prem-data-col {
   padding: 5px 15px 5px 15px;
-  width: 30%;
+  width: 45%;
 }
 
 .right > .data-field {
@@ -151,11 +172,39 @@ p {
 
 .prem-data-section {
   display: flex;
-  height: 125px;
+  min-height: 125px;
   justify-content: space-between;
 }
 
 #current-price-field {
   display: flex;
   align-items: center;
+}
+
+button {
+  padding: 3px 5px;
+  margin: 5px;
+  font-size: 11px;
+  border: 2px solid #f9fbfa;
+  border-radius: 3px;
+  color: #f9fbfa;
+  background-color: #157145;
+}
+
+button:hover {
+  background-color: #378d63;
+}
+
+button:active {
+  background-color: #58aa82;
+}
+
+button:disabled {
+  background-color: #58aa82;
+}
+
+.login-label,
+.login-input,
+.login-button {
+  margin-left: 8px;
 }
