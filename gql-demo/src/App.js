@@ -60,7 +60,7 @@ export default function App(props) {
       <div className="header">
         <div id="main-title-area">
           <h1 id="page-title">Find a Stock</h1>{" "}
-          {premiumUser ? <span id="premium-flag"> Premium</span> : ""}
+          {premiumUser ? <div id="premium-flag"> Premium</div> : ""}
         </div>
         <div className="utilities">
           <LoginFields loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
@@ -86,6 +86,7 @@ export default function App(props) {
         {stock && <Stock stock={stock} setSavedStocks={setSavedStocks} />}
       </div>
       <div className="saved-stocks">
+        {savedStocks && <h2 class="section-header">Saved Stocks</h2>}
         {savedStocks &&
           savedStocks.map((stock) => {
             return <SavedStock stock={stock} setSavedStocks={setSavedStocks} />;

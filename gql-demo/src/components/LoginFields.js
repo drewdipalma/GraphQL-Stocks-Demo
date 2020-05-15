@@ -26,7 +26,7 @@ export default function LoginFields(props) {
     }
   }
 
-  // Handle Logout 
+  // Handle Logout
   async function handleLogout() {
     try {
       await app.auth.loginWithCredential(new AnonymousCredential());
@@ -40,26 +40,33 @@ export default function LoginFields(props) {
     }
   }
 
-
   return loggedIn ? (
     <button onClick={handleLogout}>Logout</button>
   ) : (
     <form onSubmit={handleLogin}>
-      <label htmlFor="username">Username:</label>
+      <label className="login-label" htmlFor="username">
+        Username:
+      </label>
       <input
+        className="login-input"
         type="email"
         name="username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-      <label htmlFor="password">Password:</label>
+      <label className="login-label" htmlFor="password">
+        Password:
+      </label>
       <input
+        className="login-input"
         type="password"
         name="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button type="submit">Login</button>
+      <button className="login-button" type="submit">
+        Login
+      </button>
     </form>
   );
 }
