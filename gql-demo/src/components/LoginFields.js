@@ -1,5 +1,5 @@
 import React from "react";
-import { app } from "../index";
+import { app, client } from "../index";
 import {
   AnonymousCredential,
   UserPasswordCredential,
@@ -21,6 +21,8 @@ export default function LoginFields(props) {
       setLoggedIn(
         app.auth.user.loggedInProviderType === "anon-user" ? false : true
       );
+      await client.clearStore()
+      await client.resetStore()
     } catch (error) {
       console.log("Issue with user Login:", error);
     }
@@ -35,6 +37,8 @@ export default function LoginFields(props) {
       );
       setUsername("foo@bar.com");
       setPassword("Password");
+      await client.clearStore()
+      await client.resetStore()
     } catch (error) {
       console.log("Issue with user Logout:", error);
     }

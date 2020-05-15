@@ -1,6 +1,6 @@
 import "./index.css";
 import * as React from "react";
-import { app } from "./index";
+import {app, client} from "./index";
 import Stock from "./components/Stock";
 import SavedStock from "./components/SavedStock";
 import LoginFields from "./components/LoginFields";
@@ -44,13 +44,13 @@ export default function App(props) {
   // Update the custom data by re-freshing the Token on Login/Upgrade
   React.useEffect(() => {
     try {
-      async function getCustomData() {
-        await app.auth.refreshAccessToken();
-        setPremiumUser(app.auth.user.customData.premiumUser);
-        setSavedStocks(app.auth.user.customData.savedStocks);
-      }
-      getCustomData();
-    } catch (error) {
+        async function getCustomData() {
+          await app.auth.refreshAccessToken();
+          setPremiumUser(app.auth.user.customData.premiumUser);
+          setSavedStocks(app.auth.user.customData.premiumUser ? app.auth.user.customData.savedStocks : []);
+        }
+        getCustomData();
+      } catch (error) {
       console.log("Issue refreshing Custom Data:", error);
     }
   }, [loggedIn, setLoggedIn, premiumUser, setPremiumUser]);
@@ -67,6 +67,7 @@ export default function App(props) {
           <UpgradeButton
             premiumUser={premiumUser}
             setPremiumUser={setPremiumUser}
+            setSavedStocks={setSavedStocks}
             loggedIn={loggedIn}
           />
         </div>

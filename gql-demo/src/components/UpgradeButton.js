@@ -15,9 +15,10 @@ export default function UpgradeButton(props) {
           set: { premiumUser: !app.auth.user.customData.premiumUser },
         },
       });
-
-      client.resetStore();
+      
       await app.auth.refreshAccessToken();
+      await client.clearStore()
+      await client.resetStore()
       setPremiumUser(app.auth.user.customData.premiumUser);
     } catch(error){
       console.log("Issue upgrading/downgrading user:", error);
