@@ -45,7 +45,7 @@ export default function ExpandedStock(props) {
       <div className="prem-data-section">
         <div className="prem-data-col left">
           <h4>Description:</h4>
-          <p>{stock.description.split(" ").slice(0, 10).join(" ") + "..."}</p>
+          <p>{stock.description.split(" ").slice(0, 25).join(" ") + "..."}</p>
           <div className="data-field">
             <h4>Industry: </h4>
             <div className="data">{stock.industry}</div>
