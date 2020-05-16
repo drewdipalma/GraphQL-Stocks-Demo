@@ -1,13 +1,12 @@
 import "./index.css";
 import * as React from "react";
-import {app, client} from "./index";
+import {app} from "./index";
 import Stock from "./components/Stock";
 import SavedStock from "./components/SavedStock";
 import LoginFields from "./components/LoginFields";
 import UpgradeButton from "./components/UpgradeButton";
 import { useQuery } from "@apollo/react-hooks";
 import { FIND_STOCK } from "./graphql-operations";
-import { Stitch, AnonymousCredential } from "mongodb-stitch-browser-sdk";
 export const APP_ID = "gql-stock-backend-svphb";
 
 export default function App(props) {
@@ -34,7 +33,6 @@ export default function App(props) {
   );
 
   // Get Stock via GraphQL and update 'stock' value
-  // TO DO: Update to a Hook?
   const { loading, error, data } = useQuery(FIND_STOCK, {
     variables: { query: { ticker: searchText } },
   });
